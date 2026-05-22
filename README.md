@@ -2,6 +2,10 @@
 
 > An autonomous agentic pipeline that clones a GitHub repository, parses Python source code using Abstract Syntax Trees (AST), submits code chunks to a Groq-powered LLM, and delivers actionable, confidence-rated review comments via a Streamlit dashboard.
 
+## 🚀 Live Demo
+
+> **[👉 Click here to try the live app](https://aicodereviewer-cgd6nbbjdkq8dbttnihrjo.streamlit.app/)**
+
 
 
 ---
