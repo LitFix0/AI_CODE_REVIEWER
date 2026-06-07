@@ -87,17 +87,16 @@ class Pipeline:
         self.progress("Collecting Python files…", 1, 4)
         files = self.ingestion.collect_files(repo_path)
         if not files:
-            raise RuntimeError("No Python files found in this repository.")
+            raise RuntimeError("No supported files found in this repository (.py, .rs)")
 
         # Limit file count
         files = files[: self.MAX_FILES]
 
         # 3. Parse all files
-        self.progress(f"Parsing {len(files)} files with AST…", 2, 4)
+        self.progress(f"Parsing {len(files)} files…", 2, 4)
         all_chunks = []
         for f in files:
-            parsed = self.parser.parse_file(f)
-            chunks = self.parser.chunk_for_review(parsed)
+            _, chunks = self.parser.parse_and_chunk(f)
             all_chunks.extend(chunks[: self.MAX_CHUNKS_PER_FILE])
 
         if not all_chunks:

@@ -230,9 +230,13 @@ with st.sidebar:
     st.markdown("""
     **How it works:**
     1. Clones your repo (depth=1)
-    2. Parses Python files with AST
+    2. Parses source files with AST
     3. Sends code chunks to Groq LLM
     4. Aggregates confidence-rated comments
+
+    **Supported languages:**
+    - 🐍 Python (.py) — AST parsing
+    - 🦀 Rust (.rs) — Structural parsing
 
     **Confidence scoring:**
     - 🟢 ≥70% — High confidence
@@ -244,7 +248,7 @@ with st.sidebar:
 # ── Main area ─────────────────────────────────────────────────────────────────
 
 st.markdown("# 🔍 AI Code Review Agent")
-st.markdown("Autonomous repository analysis powered by Groq · AST parsing · Confidence scoring")
+st.markdown("Autonomous repository analysis powered by Groq · Python & Rust · Confidence scoring")
 st.divider()
 
 # Session state
@@ -292,7 +296,7 @@ if result is None:
     <div style="text-align:center; padding:4rem 0; color:#8b949e;">
         <div style="font-size:3rem;">🤖</div>
         <div style="font-size:1.2rem; margin-top:1rem; color:#c9d1d9;">Enter a GitHub URL and click <strong>Run Review</strong></div>
-        <div style="margin-top:0.5rem;">The agent will clone, parse, and review your Python code automatically.</div>
+        <div style="margin-top:0.5rem;">The agent will clone, parse, and review your Python & Rust code automatically.</div>
     </div>
     """, unsafe_allow_html=True)
     st.stop()

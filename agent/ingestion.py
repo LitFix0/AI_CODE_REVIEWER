@@ -9,18 +9,23 @@ import tempfile
 from pathlib import Path
 from typing import Optional
 import git
-from git import Repo, InvalidGitRepositoryError
+from git import Repo
+from agent.parsers import PARSER_REGISTRY
 
 
 class RepoIngestion:
     """Handles cloning and file collection from GitHub repositories."""
 
-    SUPPORTED_EXTENSIONS = {".py"}
-    MAX_FILE_SIZE_KB = 500  # Skip files larger than this
+    MAX_FILE_SIZE_KB = 500
     IGNORE_DIRS = {
         ".git", "__pycache__", ".venv", "venv", "env",
-        "node_modules", ".tox", "dist", "build", "*.egg-info"
+        "node_modules", ".tox", "dist", "build", "*.egg-info",
+        "target",   # Rust build output
     }
+
+    @property
+    def SUPPORTED_EXTENSIONS(self):
+        return set(PARSER_REGISTRY.keys())
 
     def __init__(self, clone_root: Optional[str] = None):
         self.clone_root = clone_root or tempfile.mkdtemp(prefix="code_reviewer_")
@@ -60,14 +65,16 @@ class RepoIngestion:
         if not root.exists():
             raise FileNotFoundError(f"Repo path not found: {root}")
 
+        supported = set(PARSER_REGISTRY.keys())
         collected = []
         for file_path in root.rglob("*"):
-            # Skip ignored directories
-            if any(part in self.IGNORE_DIRS for part in file_path.parts):
-                continue
-            if file_path.suffix not in self.SUPPORTED_EXTENSIONS:
-                continue
             if not file_path.is_file():
+                continue
+            if file_path.suffix not in supported:
+                continue
+            # Use relative parts only to avoid Windows drive letter false matches
+            rel_parts = file_path.relative_to(root).parts
+            if any(part in self.IGNORE_DIRS for part in rel_parts):
                 continue
 
             size_kb = file_path.stat().st_size / 1024
