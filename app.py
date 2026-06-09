@@ -237,6 +237,7 @@ with st.sidebar:
     **Supported languages:**
     - 🐍 Python (.py) — AST parsing
     - 🦀 Rust (.rs) — Structural parsing
+    - 🟨 JavaScript/TS (.js, .ts, .jsx, .tsx) — Structural parsing
 
     **Confidence scoring:**
     - 🟢 ≥70% — High confidence
@@ -248,7 +249,7 @@ with st.sidebar:
 # ── Main area ─────────────────────────────────────────────────────────────────
 
 st.markdown("# 🔍 AI Code Review Agent")
-st.markdown("Autonomous repository analysis powered by Groq · Python & Rust · Confidence scoring")
+st.markdown("Autonomous repository analysis powered by Groq · Python, Rust & JavaScript · Confidence scoring")
 st.divider()
 
 # Session state
